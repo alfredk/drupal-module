@@ -128,6 +128,46 @@
       set_value($(this).parent());
     });
 
+
+    $('.gc_filter input').change(function() {
+      var tr = $(this).closest('tr'),
+          item_id = tr.attr('data-item-id');
+
+      if($('#gc_repeat_'+item_id).is(':checked')){
+        var rows = tr.parent().find('tr[data-item-id]'),
+            idx = rows.index(tr),
+            val = $(this).val();
+        rows.filter(':gt('+idx+')').each(function(){
+          var item_id = $(this).attr('data-item-id');
+          if(!$('#gc_repeat_'+item_id).is(':checked')){
+            $('#gc_filter_'+item_id+' li:not(.hidden-item) a[data-value="'+val+'"]').trigger('click');
+          } else {
+            return false;
+          }
+        });
+      }
+    });
+
+    $('.gc_parent input').change(function() {
+      var tr = $(this).closest('tr'),
+          item_id = tr.attr('data-item-id');
+
+      if($('#gc_repeat_'+item_id).is(':checked')){
+        var rows = tr.parent().find('tr[data-item-id]'),
+            idx = rows.index(tr),
+            val = $(this).val();
+        rows.filter(':gt('+idx+')').each(function(){
+          var item_id = $(this).attr('data-item-id');
+          if(!$('#gc_repeat_'+item_id).is(':checked')){
+            $('#gc_parent_'+item_id+' li:not(.hidden-item) a[data-value="'+val+'"]').trigger('click');
+          } else {
+            return false;
+          }
+        });
+      }
+    });
+
+
     $('.gc_filter').each(function(){
       set_value($(this));
     });
@@ -220,6 +260,7 @@
       field_rows = c.find('.gc_settings_field'),
       fields = {},
       import_as = $('#gc_import_as_'+item_id+' input').val(),
+      parent = $('#gc_parent_'+item_id+' input').val(),
       filter = $('#gc_filter_'+item_id+' input').val();
     rows = rows.filter(':gt('+idx+')');
     field_rows.each(function(){
@@ -235,6 +276,7 @@
       if(!$('#gc_repeat_'+item_id).is(':checked')){
         c.find('> .gc_settings_field').removeClass('moved').addClass('not-moved');
         $('#gc_import_as_'+item_id+' a[data-value="'+import_as+'"]').trigger('click');
+        $('#gc_parent_'+item_id+' a[data-value="'+parent+'"]').trigger('click');
         $('#gc_filter_'+item_id+' a[data-value="'+filter+'"]').trigger('click');
         for(var i in fields){
           if(fields.hasOwnProperty(i)){
